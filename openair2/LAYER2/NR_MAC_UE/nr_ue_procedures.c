@@ -4168,14 +4168,16 @@ static void nr_ue_process_mac_pdu(NR_UE_MAC_INST_t *mac, nr_downlink_indication_
     uint8_t rx_lcid = ((NR_MAC_SUBHEADER_FIXED *)pduP)->LCID;
 
     LOG_D(MAC, "[UE] LCID %d, PDU length %d\n", rx_lcid, pdu_len);
-    bool ret;
     switch (rx_lcid) {
       //  MAC CE
       case DL_SCH_LCID_CCCH:
         //  MSG4 RRC Setup 38.331
         //  variable length
-        ret=get_mac_len(pduP, pdu_len, &mac_len, &mac_subheader_len);
-        AssertFatal(ret, "The mac_len (%d) has an invalid size. PDU len = %d! \n", mac_len, pdu_len);
+        if (!get_mac_len(pduP, pdu_len, &mac_len, &mac_subheader_len)) {
+          LOG_E(MAC, "get_mac_len(): invalid CCCH PDU length %d\n", pdu_len);
+          done = 1;
+          continue;
+        }
 
         // Check if it is a valid CCCH message, we get all 00's messages very often
         int i = 0;
