@@ -4353,10 +4353,6 @@ static void nr_ue_process_mac_pdu(NR_UE_MAC_INST_t *mac, nr_downlink_indication_
     }
     pduP += (mac_subheader_len + mac_len);
     pdu_len -= (mac_subheader_len + mac_len);
-    if (pdu_len < 0) {
-      LOG_E(MAC, "[UE %d][%d.%d] nr_ue_process_mac_pdu, residual mac pdu length %d < 0!\n", mac->ue_id, frameP, slot, pdu_len);
-      done = 1;
-    }
   }
 
   nr_mac_rlc_data_ind(mac->ue_id, mac->ue_id, false, data_ind, num_data_ind);
