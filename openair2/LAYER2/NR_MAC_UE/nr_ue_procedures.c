@@ -4178,6 +4178,11 @@ static void nr_ue_process_mac_pdu(NR_UE_MAC_INST_t *mac, nr_downlink_indication_
           done = 1;
           continue;
         }
+        if (mac_len >= CCCH_SDU_SIZE) {
+          LOG_E(MAC, "Invalid CCCH SDU length %d\n", mac_len);
+          done = 1;
+          continue;
+        }
 
         // Check if it is a valid CCCH message, we get all 00's messages very often
         int i = 0;
